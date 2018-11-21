@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+:global {
+
+  html {
+    font-size: 625%;
+  }
+
+  body {
+    font-size: 15px;
+    margin: 0;
+    overflow: hidden;
+    color: #505050;
+    font-family: 'Source Sans Pro', sans-serif, Lato, Helvetica Neue, Arial, PingFang SC, Hiragino Sans GB, STHeiti, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+}
