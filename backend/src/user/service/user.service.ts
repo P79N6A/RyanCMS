@@ -1,13 +1,13 @@
 import { Injectable, BadRequestException, HttpService } from '@nestjs/common';
 import { RegisterDto } from '../form/register.dto';
 import { UserEntity } from '../entities/user.entity';
-import { LoginDto } from 'user/form/login.dto';
+import { LoginDto } from '../form/login.dto';
 @Injectable()
 export class UserService {
 	constructor() {}
 
-	register(registerDto: RegisterDto) {
-		return UserEntity.register(registerDto);
+	register(registerDto: RegisterDto, userRank: number) {
+		return UserEntity.register(registerDto, userRank);
 	}
 
 	getUser(userId: number) {

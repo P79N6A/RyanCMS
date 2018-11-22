@@ -12,10 +12,10 @@ import './public.scss';
 const store = createStore(reducers);
 
 render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <Routes />
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById('root') as HTMLElement
-)
+	<Provider store={store}>
+		<BrowserRouter>
+			<Routes />
+		</BrowserRouter>
+	</Provider>,
+	document.getElementById('root') as HTMLElement
+);

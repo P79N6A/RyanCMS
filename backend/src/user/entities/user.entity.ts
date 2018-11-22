@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import dayjs from 'dayjs';
 import { PasswordEntity } from './password.entity';
-import { LoginDto } from 'user/form/login.dto';
+import { LoginDto } from '../form/login.dto';
 const key = 'cms_blog';
 @Entity('user')
 export class UserEntity extends BaseEntity {
@@ -50,6 +50,13 @@ export class UserEntity extends BaseEntity {
 	})
 	created_at: number;
 
+	// 最近登录
+	@Column({
+		type: 'int',
+		default: () => dayjs().unix()
+	})
+	last_login: number;
+
 	@Column({
 		type: 'varchar',
 		length: 255,
@@ -67,25 +74,26 @@ export class UserEntity extends BaseEntity {
 	@JoinColumn({ name: 'user_id' })
 	password: PasswordEntity;
 
-	static encodePassword(password) {
+	static encodePassword(password: string) {
 		return crypto.createHmac('sha256', key).update(password).digest('hex');
 	}
 
-	static sign(userId) {
+	static sign(userId: number, rank: number) {
 		return jwt.sign(
 			{
 				user_id: userId,
+				rank,
 				expiresIn: '7d'
 			},
 			key
 		);
 	}
 
-	static verify(token) {
+	static verify(token: string) {
 		return jwt.verify(token, key);
 	}
 
-	static getUser(userId) {
+	static getUser(userId: number) {
 		return this.findOne({
 			where: {
 				user_id: userId
@@ -93,7 +101,7 @@ export class UserEntity extends BaseEntity {
 		});
 	}
 
-	static register(registerDto: RegisterDto) {
+	static register(registerDto: RegisterDto, userRank: number) {
 		const { nickname, phone, password } = registerDto;
 		return getConnection().transaction(async (transactionalEntityManager) => {
 			const count = await this.createQueryBuilder()
@@ -113,12 +121,13 @@ export class UserEntity extends BaseEntity {
 			const user = new UserEntity();
 			user.nickname = nickname;
 			user.phone = phone;
+			user.rank = userRank;
 			const userPassword = new PasswordEntity();
 			userPassword.password = this.encodePassword(password);
 			await transactionalEntityManager.save(userPassword);
 
 			user.password = userPassword;
-			user.token = this.sign(userPassword.user_id);
+			user.token = this.sign(userPassword.user_id, user.rank);
 			await transactionalEntityManager.save(user);
 			return user;
 		});
@@ -144,8 +153,9 @@ export class UserEntity extends BaseEntity {
 		if (!user) {
 			throw new Error('用户已注销');
 		}
-		const token = this.sign(user.user_id);
+		const token = this.sign(user.user_id, user.rank);
 		user.token = token;
+		user.last_login = dayjs().unix();
 		this.save(user);
 		return user;
 	}

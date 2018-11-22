@@ -7,6 +7,7 @@
     "no-unused-expression": true
   },
   "rules": {
+    "jsdoc-format": false,
     "quotemark": [
       true,
       "single"
@@ -17,8 +18,7 @@
     "trailing-comma": false,
     "no-trailing-whitespace": false,
     "eofline": false,
-    "indent": {
-    },
+    "indent": {},
     "member-access": false,
     "ordered-imports": false,
     "max-line-length": [

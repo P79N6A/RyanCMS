@@ -1,13 +1,12 @@
-import {
-  combineReducers
-} from 'redux';
+import { combineReducers } from 'redux';
 
-import  { books, Book } from '../model/books';
+import { user } from '../model/User';
+import { User } from '../interface/user.interface';
 
 export interface Reducers {
-  books: Book[]
+	user: User;
 }
 
 export const reducers = combineReducers({
-    books,
-})
+	user
+});
