@@ -6,13 +6,16 @@ import {
 	validate,
 	name,
 	password,
-	email,
 	comfirmPassword,
 	checkName,
 	checkEmail,
 	checkPassword,
-	checkComfirmPassword
+	checkComfirmPassword,
+	phone
 } from '../../../../util/validator/validate';
+import { API } from '../../../../services/API';
+import { UserUpdate } from '../../../../model/user.model';
+import { catchError } from '../../../../util/ComponentErrorCatch';
 const options = [
 	{
 		name: 'name',
@@ -30,13 +33,13 @@ const options = [
 		}
 	},
 	{
-		name: 'email',
-		placeholder: '请输入邮箱',
+		name: 'phone',
+		placeholder: '请输入手机号',
 		type: 'text',
 		className: styles['input-item'],
 		value: '',
 		formItem: {
-			label: <span>邮箱&emsp;&emsp;</span>,
+			label: <span>手机号&emsp;</span>,
 			className: styles['label-item']
 		},
 		validator: {
@@ -46,7 +49,7 @@ const options = [
 	},
 	{
 		name: 'password',
-		placeholder: '至少8位密码',
+		placeholder: '6-36位密码',
 		type: 'password',
 		className: styles['input-item'],
 		value: '',
@@ -83,9 +86,10 @@ interface State {
 }
 
 interface Props {
-	userUpdate: Function;
+	userUpdate: UserUpdate;
 }
 
+@catchError
 export class RegisterForm extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
@@ -107,13 +111,14 @@ export class RegisterForm extends React.Component<Props, State> {
 	};
 
 	@validate
-	register(
+	async register(
 		@name name: string,
-		@email email: string,
+		@phone phone: string,
 		@password password: string,
 		@comfirmPassword passwords: Array<string>
 	) {
-		console.log('注册');
+		const user = await API.user.register(name, phone, password);
+		this.props.userUpdate(user);
 	}
 
 	render() {

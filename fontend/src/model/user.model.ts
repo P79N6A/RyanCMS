@@ -9,13 +9,20 @@ interface UserAction extends AnyAction {
 	data: User;
 }
 
-export function userLogin(data: User) {
-	return { type: LOGIN, data };
+export interface UserLogin {
+	(data: User): void;
 }
 
-export function userUpdate(data: User) {
-	return { type: UPDATE, data };
+export interface UserUpdate {
+	(data: User): void;
 }
+export const userLogin: UserLogin = function(data: User) {
+	return { type: LOGIN, data };
+};
+
+export const userUpdate: UserUpdate = function(data) {
+	return { type: UPDATE, data };
+};
 
 export function user(state: User | null = null, action: UserAction) {
 	switch (action.type) {

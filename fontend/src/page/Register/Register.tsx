@@ -7,13 +7,12 @@ import { Row, Col } from 'antd';
 import * as styles from './Register.scss';
 import { RegisterInfo } from './components/RegisterInfo/RegisterInfo';
 import { RegisterForm } from './components/RegisterForm/RegisterForm';
-import { userUpdate } from '../../model/user.model';
-
+import { userUpdate, UserUpdate } from '../../model/user.model';
 interface Props extends RouteProps, RouterProps {
-	userUpdate: () => void;
+	userUpdate: UserUpdate;
 }
 
-@(connect as any)(
+@connect(
 	(state: Reducers) => ({
 		books: state.user
 	}),

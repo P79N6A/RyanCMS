@@ -1,7 +1,5 @@
 import { Rate } from 'antd';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Reducers } from '../../reducers/reducers';
 import { validate, phone, password } from '../../util/validator/validate';
 import { RouteProps, RouterProps } from 'react-router';
 import * as styles from './Home.scss';
