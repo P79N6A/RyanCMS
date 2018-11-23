@@ -7,7 +7,7 @@ import { Row, Col } from 'antd';
 import * as styles from './Register.scss';
 import { RegisterInfo } from './components/RegisterInfo/RegisterInfo';
 import { RegisterForm } from './components/RegisterForm/RegisterForm';
-import { userUpdate } from '../../model/User';
+import { userUpdate } from '../../model/user.model';
 
 interface Props extends RouteProps, RouterProps {
 	userUpdate: () => void;

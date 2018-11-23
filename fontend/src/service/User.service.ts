@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-export class User {
+export class UserService {
 	static register(password: string, nickname: string, phone: string) {
 		return Axios.post('/register', {
 			nickname,

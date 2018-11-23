@@ -1,3 +1,3 @@
-import { User } from './user.service';
+import { UserService } from './user.service';
 
-export const API = { user: User };
+export const API = { user: UserService };
