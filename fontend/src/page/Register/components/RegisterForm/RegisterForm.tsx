@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import styles from './RegisterForm.scss';
 import { CustomForm, InputItemProps, getFormValues, Trigger } from '../../../../components/CustomForm/CustomForm';
 import {
@@ -8,14 +8,15 @@ import {
 	password,
 	comfirmPassword,
 	checkName,
-	checkEmail,
 	checkPassword,
 	checkComfirmPassword,
-	phone
+	phone,
+	checkPhone
 } from '../../../../util/validator/validate';
+import { UserLogin } from '../../../../model/user.model';
+import { catchError } from '../../../../util/catchError';
 import { API } from '../../../../services/API';
-import { UserUpdate } from '../../../../model/user.model';
-import { catchError } from '../../../../util/ComponentErrorCatch';
+import { RouterProps } from 'react-router';
 const options = [
 	{
 		name: 'name',
@@ -43,7 +44,7 @@ const options = [
 			className: styles['label-item']
 		},
 		validator: {
-			dataValid: (val: string) => checkEmail(val),
+			dataValid: (val: string) => checkPhone(val),
 			trigger: [ Trigger.blur ]
 		}
 	},
@@ -85,11 +86,10 @@ interface State {
 	options: Array<InputItemProps>;
 }
 
-interface Props {
-	userUpdate: UserUpdate;
+interface Props extends RouterProps {
+	userLogin: UserLogin;
 }
 
-@catchError
 export class RegisterForm extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
@@ -107,10 +107,11 @@ export class RegisterForm extends React.Component<Props, State> {
 
 	onSubmit = () => {
 		const options = getFormValues(this.state.options);
-		this.register(options.name, options.email, options.password, [ options.password, options.comfirmPassword ]);
+		this.register(options.name, options.phone, options.password, [ options.password, options.comfirmPassword ]);
 	};
 
 	@validate
+	@catchError()
 	async register(
 		@name name: string,
 		@phone phone: string,
@@ -118,7 +119,9 @@ export class RegisterForm extends React.Component<Props, State> {
 		@comfirmPassword passwords: Array<string>
 	) {
 		const user = await API.user.register(name, phone, password);
-		this.props.userUpdate(user);
+		this.props.userLogin(user);
+		message.success('注册成功，正在跳转');
+		this.props.history.push('/');
 	}
 
 	render() {

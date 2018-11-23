@@ -6,6 +6,7 @@ import crypto from 'crypto';
 import dayjs from 'dayjs';
 import { PasswordEntity } from './password.entity';
 import { LoginDto } from '../form/login.dto';
+import { UserError } from '../../common/filters/userError';
 const key = 'cms_blog';
 @Entity('user')
 export class UserEntity extends BaseEntity {
@@ -90,7 +91,11 @@ export class UserEntity extends BaseEntity {
 	}
 
 	static verify(token: string) {
-		return jwt.verify(token, key);
+		try {
+			return jwt.verify(token, key);
+		} catch (error) {
+			throw new UserError('无效的token');
+		}
 	}
 
 	static getUser(userId: number) {
@@ -115,7 +120,7 @@ export class UserEntity extends BaseEntity {
 
 			// 如果存在用户名或手机号被注册
 			if (count) {
-				throw new Error('用户名或手机号已被注册');
+				throw new UserError('用户名或手机号已被注册');
 			}
 
 			const user = new UserEntity();
@@ -142,7 +147,7 @@ export class UserEntity extends BaseEntity {
 			}
 		});
 		if (!isExist) {
-			throw new Error('密码错误');
+			throw new UserError('密码错误');
 		}
 		const user = await this.findOne({
 			where: {
@@ -151,7 +156,7 @@ export class UserEntity extends BaseEntity {
 			}
 		});
 		if (!user) {
-			throw new Error('用户已注销');
+			throw new UserError('用户已注销');
 		}
 		const token = this.sign(user.user_id, user.rank);
 		user.token = token;

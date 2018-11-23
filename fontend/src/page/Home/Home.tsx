@@ -3,11 +3,12 @@ import * as React from 'react';
 import { validate, phone, password } from '../../util/validator/validate';
 import { RouteProps, RouterProps } from 'react-router';
 import * as styles from './Home.scss';
+import { TOKEN } from '../../config/constant';
 interface Props extends RouteProps, RouterProps {}
 
-export default class App extends React.Component<Props, any> {
+export class Home extends React.Component<Props, any> {
 	componentDidMount() {
-		this.login('183206650111', '1254asd');
+		console.log(this.props.history);
 	}
 
 	@validate

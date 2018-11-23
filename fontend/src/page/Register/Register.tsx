@@ -7,22 +7,24 @@ import { Row, Col } from 'antd';
 import * as styles from './Register.scss';
 import { RegisterInfo } from './components/RegisterInfo/RegisterInfo';
 import { RegisterForm } from './components/RegisterForm/RegisterForm';
-import { userUpdate, UserUpdate } from '../../model/user.model';
+import { userLogin, UserLogin } from '../../model/user.model';
+import { User } from '../../interface/user.interface';
 interface Props extends RouteProps, RouterProps {
-	userUpdate: UserUpdate;
+	user: User;
+	userLogin: UserLogin;
 }
-
+interface State {}
 @connect(
 	(state: Reducers) => ({
-		books: state.user
+		user: state.user
 	}),
 	{
-		userUpdate
+		userLogin
 	}
 )
-export default class App extends React.Component<Props, any> {
+export class Register extends React.Component<Props, State> {
 	public render() {
-		const { userUpdate } = this.props;
+		const { userLogin, history } = this.props;
 		return (
 			<div className={styles['container']}>
 				<Row gutter={24}>
@@ -30,7 +32,7 @@ export default class App extends React.Component<Props, any> {
 						<RegisterInfo />
 					</Col>
 					<Col span={12}>
-						<RegisterForm userUpdate={userUpdate} />
+						<RegisterForm history={history} userLogin={userLogin} />
 					</Col>
 				</Row>
 			</div>

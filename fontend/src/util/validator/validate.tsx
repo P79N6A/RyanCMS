@@ -71,7 +71,7 @@ function Validator(propertyKey: string, target: any, data: object) {
 		let key: string = Reflect.getMetadata(propertyKey, target, item.type);
 		if (data.hasOwnProperty(key)) {
 			const value = data[key];
-			if ((item.checkValue as any)(value)) {
+			if (!(item.checkValue as any)(value)) {
 				throw new Error(item.message);
 			}
 		}

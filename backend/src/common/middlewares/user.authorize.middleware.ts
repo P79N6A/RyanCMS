@@ -6,11 +6,13 @@ export class UserAuthorizeMiddleware implements NestMiddleware {
 	constructor() {}
 
 	resolve(...args: any[]): MiddlewareFunction | Promise<MiddlewareFunction> {
-		return async (req: any, res, next) => {
+		return (req: any, res, next) => {
 			const authorization = req.headers.authorization;
 			if (authorization) {
 				const token = authorization.replace('Ryan ', '');
-				req.headers.auth = await UserEntity.verify(token);
+				try {
+					req.headers.auth = UserEntity.verify(token);
+				} catch (error) {}
 			}
 			next();
 		};

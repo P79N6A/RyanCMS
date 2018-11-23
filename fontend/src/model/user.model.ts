@@ -1,9 +1,10 @@
 import { AnyAction } from 'redux';
 import { User } from '../interface/user.interface';
-import Axios from 'axios';
+import { TOKEN } from '../config/constant';
 
 const LOGIN: string = 'LOGIN';
 const UPDATE: string = 'UPDATE';
+const LOGOUT: string = 'LOGOUT';
 
 interface UserAction extends AnyAction {
 	data: User;
@@ -16,12 +17,20 @@ export interface UserLogin {
 export interface UserUpdate {
 	(data: User): void;
 }
+
+export interface Logout {
+	(): void;
+}
 export const userLogin: UserLogin = function(data: User) {
 	return { type: LOGIN, data };
 };
 
 export const userUpdate: UserUpdate = function(data) {
 	return { type: UPDATE, data };
+};
+
+export const logout: Logout = function() {
+	return { type: LOGOUT };
 };
 
 export function user(state: User | null = null, action: UserAction) {
@@ -35,13 +44,11 @@ export function user(state: User | null = null, action: UserAction) {
 			}
 			break;
 		case LOGIN:
-			Axios.defaults = {
-				headers: {
-					authorization: action.data.token
-				}
-			};
+			localStorage.setItem(TOKEN, action.data.token);
 			state = action.data;
 			break;
+		case LOGOUT:
+			localStorage.setItem(TOKEN, '');
 		default:
 	}
 	return state;
