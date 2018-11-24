@@ -3,12 +3,17 @@ import { Register } from '../page/Register/Register';
 import { Forbidden } from '../page/Forbidden/Forbidden';
 import { Login } from '../page/Login/Login';
 import { NotFound } from '../page/NotFound/NotFound';
+import { Layout } from '../components/Layout/Layout';
 export const routes = [
+	{
+		path: '/admin',
+		component: Layout,
+		isAuth: true
+	},
 	{
 		path: '/',
 		component: Home,
-		exact: true,
-		isAuth: true
+		exact: true
 	},
 	{
 		path: '/login',

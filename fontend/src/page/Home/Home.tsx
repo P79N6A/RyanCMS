@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { Reducers } from '../../reducers/reducers';
 import { User } from '../../interface/user.interface';
 import { logout, Logout } from '../../model/user.model';
+
 interface Props extends RouteProps, RouterProps {
 	user: User;
 	logout: Logout;
@@ -21,7 +22,6 @@ interface Props extends RouteProps, RouterProps {
 )
 export class Home extends React.Component<Props, any> {
 	public render() {
-		this.props.children
 		return (
 			<div className={styles['App']}>
 				<p className={styles['App-intro']}>

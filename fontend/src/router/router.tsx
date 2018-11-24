@@ -10,6 +10,7 @@ import { catchError } from '../util/decorators/catchError';
 import { routes } from './routes';
 import { afterState } from '../util/decorators/afterState';
 import { User } from '../interface/user.interface';
+import Header from '../components/Header/Header';
 
 interface State {
 	mounted: boolean;
@@ -56,25 +57,27 @@ export class RouterConfig extends React.Component<any, State> {
 		const { mounted } = this.state;
 		return mounted ? (
 			<BrowserRouter>
-				<Switch>
+				<div>
 					{routes.map((route, index) => {
 						return (
 							<Route
 								key={index}
 								path={route.path}
-								exact={true}
+								exact={route.exact}
 								render={(props) => {
 									const RouteComponent = route.component as any;
 									return route.isAuth && !user ? (
 										<Redirect key={index} to="/login" />
 									) : (
-										<RouteComponent {...props} />
+										<div>
+											<RouteComponent {...props} />
+										</div>
 									);
 								}}
 							/>
 						);
 					})}
-				</Switch>
+				</div>
 			</BrowserRouter>
 		) : null;
 	}

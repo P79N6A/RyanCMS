@@ -12,6 +12,12 @@ const autoprefixer = require('autoprefixer')({
   flexbox: 'no-2009',
 });
 
+const themeConfig = {
+  'primary-color': '#1DA57A',
+  'link-color': '#1DA57A',
+  'border-radius-base': '2px',
+}
+
 const precss = require('precss')();
 const flexBugFixes = require('postcss-flexbugs-fixes')();
 
@@ -34,8 +40,7 @@ const cssFilename = 'static/css/[name].[contenthash:8].css';
 const extractTextPluginOptions = shouldUseRelativeAssetPaths ? // Making sure that the publicPath goes back to to build folder.
   {
     publicPath: Array(cssFilename.split('/').length).join('../')
-  } :
-  {};
+  } : {};
 
 
 // "url" loader works like "file" loader except that it embeds assets
@@ -53,7 +58,7 @@ const urlLoader = {
 const importPluginOption = [{
     libraryName: 'antd',
     libraryDirectory: 'lib',
-    style: 'css'
+    style: true
   },
   {
     libraryName: 'antd-mobile',
@@ -208,7 +213,13 @@ const lessLoaderDev = {
     require.resolve('style-loader'),
     rawCssLoaderDev,
     postcssLoader,
-    require.resolve('less-loader')
+    {
+      loader: "less-loader",
+      options: {
+        modifyVars: themeConfig,
+        javascriptEnabled: true,
+      },
+    }
   ],
 };
 
@@ -220,8 +231,12 @@ const lessLoaderProd = {
         use: [
           rawCssLoaderProd,
           postcssLoader,
-          require.resolve('less-loader')
-        ],
+          {
+            loader: "less-loader",
+            options: themeConfig,
+            javascriptEnabled: true,
+          }
+        ]
       },
       extractTextPluginOptions
     )
