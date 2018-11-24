@@ -49,6 +49,7 @@ export function user(state: User | null = null, action: UserAction) {
 			break;
 		case LOGOUT:
 			localStorage.setItem(TOKEN, '');
+			state = null;
 		default:
 	}
 	return state;

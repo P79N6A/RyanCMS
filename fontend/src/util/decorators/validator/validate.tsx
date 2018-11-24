@@ -1,14 +1,16 @@
 import { message } from 'antd';
 import 'reflect-metadata';
-export function validate(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-	const fun = descriptor.value;
-	descriptor.value = function() {
-		try {
-			Validator(propertyKey, target, arguments);
-			fun.apply(this, arguments);
-		} catch (error) {
-			message.warn(error.message);
-		}
+export function validate() {
+	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+		const fun = descriptor.value;
+		descriptor.value = function() {
+			try {
+				Validator(propertyKey, target, arguments);
+				fun.apply(this, arguments);
+			} catch (error) {
+				message.warn(error.message);
+			}
+		};
 	};
 }
 

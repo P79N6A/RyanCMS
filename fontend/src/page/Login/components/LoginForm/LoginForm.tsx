@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, message } from 'antd';
-import styles from './RegisterForm.scss';
+import styles from './LoginForm.scss';
 import { CustomForm, InputItemProps, getFormValues, Trigger } from '../../../../components/CustomForm/CustomForm';
 import {
 	validate,
@@ -19,21 +19,6 @@ import { API } from '../../../../services/API';
 import { RouterProps } from 'react-router';
 import { loading } from '../../../../util/decorators/loading';
 const options = [
-	{
-		name: 'name',
-		placeholder: '请输入用户名',
-		type: 'text',
-		className: styles['input-item'],
-		value: '',
-		formItem: {
-			label: <span>姓名&emsp;&emsp;</span>,
-			className: styles['label-item']
-		},
-		validator: {
-			dataValid: (val: string) => checkName(val),
-			trigger: [ Trigger.blur ]
-		}
-	},
 	{
 		name: 'phone',
 		placeholder: '请输入手机号',
@@ -63,23 +48,6 @@ const options = [
 			dataValid: (val: string, formValues: Array<string>) => checkPassword(val),
 			trigger: [ Trigger.blur ]
 		}
-	},
-	{
-		name: 'comfirmPassword',
-		placeholder: '确认密码',
-		type: 'password',
-		className: styles['input-item'],
-		value: '',
-		formItem: {
-			label: <span>确认密码</span>,
-			className: styles['label-item']
-		},
-		validator: {
-			dataValid: (val: string, formValues: Array<string>) => {
-				return checkPassword(val) && checkComfirmPassword([ val, formValues['password'] ]);
-			},
-			trigger: [ Trigger.change, Trigger.blur ]
-		}
 	}
 ];
 
@@ -92,7 +60,7 @@ interface Props extends RouterProps {
 	userLogin: UserLogin;
 }
 
-export class RegisterForm extends React.Component<Props, State> {
+export class LoginForm extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
@@ -110,22 +78,16 @@ export class RegisterForm extends React.Component<Props, State> {
 
 	onSubmit = () => {
 		const options = getFormValues(this.state.options);
-		this.register(options.name, options.phone, options.password, [ options.password, options.comfirmPassword ]);
+		this.login(options.phone, options.password);
 	};
 
 	@validate()
 	@loading()
 	@catchError()
-	async register(
-		@name name: string,
-		@phone phone: string,
-		@password password: string,
-		@comfirmPassword passwords: Array<string>
-	) {
-		this.setState({ loading: true });
-		const user = await API.user.register(name, phone, password);
+	async login(@phone phone: string, @password password: string) {
+		const user = await API.user.login(phone, password);
 		this.props.userLogin(user);
-		message.success('注册成功，正在跳转');
+		message.success('登录成功，正在跳转');
 		this.props.history.push('/');
 	}
 
@@ -133,10 +95,10 @@ export class RegisterForm extends React.Component<Props, State> {
 		const { loading } = this.state;
 		return (
 			<div className={styles['container']}>
-				<div className={styles['title']}>注册</div>
+				<div className={styles['title']}>登录</div>
 				<CustomForm callback={this.callback} className={styles['form']} options={this.state.options}>
 					<Button type="primary" onClick={this.onSubmit} loading={loading}>
-						注册
+						登录
 					</Button>
 				</CustomForm>
 			</div>

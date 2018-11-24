@@ -1,8 +1,5 @@
 import { message } from 'antd';
-export function catchError(catchFn?: Function) {
-	if (typeof catchFn !== 'function') {
-		catchFn = message.error;
-	}
+export function catchError(catchFn?: Function | string) {
 	return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		const fun = descriptor.value;
 		descriptor.value = function() {
@@ -12,9 +9,15 @@ export function catchError(catchFn?: Function) {
 				try {
 					await fun.apply(self, args);
 				} catch (error) {
-					(catchFn as Function)(error.message);
+					errorHandle.apply(self, [ error, catchFn ]);
 				}
 			})();
 		};
 	};
+}
+export function errorHandle(this: any, error: Error, catchFn: Function) {
+	if (catchFn) {
+		catchFn.apply(this, [ error.message ]);
+	}
+	message.error(error.message);
 }

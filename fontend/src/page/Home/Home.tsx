@@ -1,32 +1,33 @@
 import { Rate } from 'antd';
 import * as React from 'react';
-import { validate, phone, password } from '../../util/validator/validate';
 import { RouteProps, RouterProps } from 'react-router';
 import * as styles from './Home.scss';
-import { TOKEN } from '../../config/constant';
-interface Props extends RouteProps, RouterProps {}
-
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Reducers } from '../../reducers/reducers';
+import { User } from '../../interface/user.interface';
+import { logout, Logout } from '../../model/user.model';
+interface Props extends RouteProps, RouterProps {
+	user: User;
+	logout: Logout;
+}
+@connect(
+	(state: Reducers) => ({
+		user: state.user
+	}),
+	{
+		logout
+	}
+)
 export class Home extends React.Component<Props, any> {
-	componentDidMount() {
-		console.log(this.props.history);
-	}
-
-	@validate
-	login(@phone phone: string, @password password: string) {
-		return {
-			name: 'Ryan',
-			phone: phone,
-			sex: 1
-		};
-	}
-
 	public render() {
+		this.props.children
 		return (
 			<div className={styles['App']}>
 				<p className={styles['App-intro']}>
-					To get started, edit <code>src/App.tsx</code> and save to reload.
+					<Link to="/register">rehoster</Link>
 				</p>
-				<Rate character="6" />
+				<div onClick={this.props.logout}>退出</div>
 			</div>
 		);
 	}

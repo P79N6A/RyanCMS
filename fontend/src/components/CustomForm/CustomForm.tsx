@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { Form } from 'antd';
 import styles from './CustomForm.scss';
 import { CustomInput } from '../CustomInput/CustomInput';
 import { InputProps } from 'antd/lib/input';
 import { FormItemProps } from 'antd/lib/form';
 const FormItem = Form.Item;
-interface Props {
+interface Props extends React.Props<null> {
 	options: Array<InputItemProps>;
 	className: string;
 	callback: Function;
@@ -61,20 +61,23 @@ export function CustomForm(props: Props) {
 
 	return (
 		<div className={props.className}>
-			{props.options.map((item, index) => {
-				let inputProps = { ...item };
-				delete inputProps.validator;
-				delete inputProps.formItem;
-				return (
-					<FormItem key={index} hasFeedback={true} {...item.formItem}>
-						<CustomInput
-							{...inputProps}
-							onChange={(e) => onChange(e, item, props.options)}
-							onBlur={(e) => onBlur(e, item, props.options)}
-						/>
-					</FormItem>
-				);
-			})}
+			<Form>
+				{props.options.map((item, index) => {
+					let inputProps = { ...item };
+					delete inputProps.validator;
+					delete inputProps.formItem;
+					return (
+						<FormItem key={index} hasFeedback={true} {...item.formItem}>
+							<CustomInput
+								{...inputProps}
+								onChange={(e) => onChange(e, item, props.options)}
+								onBlur={(e) => onBlur(e, item, props.options)}
+							/>
+						</FormItem>
+					);
+				})}
+				{props.children}
+			</Form>
 		</div>
 	);
 }

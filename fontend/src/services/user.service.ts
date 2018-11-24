@@ -6,11 +6,14 @@ export class UserService {
 		return API.post('/user/register', { nickname, phone, password });
 	}
 
-	static login(password: string, nickname?: string, phone?: string): Promise<User> {
+	static login(phone: string, password: string): Promise<User> {
 		return API.post('/user/login', {
-			nickname,
 			phone,
 			password
 		});
+	}
+
+	static getInfo() {
+		return API.get('/user/info');
 	}
 }

@@ -1,9 +1,8 @@
 import { UserService } from './user.service';
 import Axios, { AxiosRequestConfig, AxiosError } from 'axios';
+import { TOKEN } from '../config/constant';
 
-const token = localStorage.getItem('token');
-
-Axios.defaults.headers.authorization = `token`;
+Axios.defaults.headers.authorization = localStorage.getItem(TOKEN);
 Axios.defaults.baseURL = `/api`;
 export const API = {
 	post: async (url: string, data?: any, config?: AxiosRequestConfig) => {
@@ -19,7 +18,8 @@ export const API = {
 			const result = await Axios.get(url, config);
 			return result.data;
 		} catch (error) {
-			throw new Error((error as any).response.data.message);
+			const resError = new Error((error as any).message) || new Error((error as any).response.data.message);
+			throw resError;
 		}
 	},
 	user: UserService
